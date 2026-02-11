@@ -370,6 +370,28 @@
             border-color: var(--kwp-blue);
         }
 
+        .error-message {
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 12px;
+            text-align: center;
+            display: none;
+            padding: 10px;
+            background: rgba(255,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .debug-info {
+            background: rgba(255,0,0,0.1);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-size: 12px;
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .stats-bar {
                 grid-template-columns: 1fr;
@@ -381,14 +403,16 @@
     </style>
 </head>
 <body>
-    <!-- HEADER WITH LOGO ONLY (No text) -->
+    <!-- HEADER WITH LOGO ONLY -->
     <div class="kwp-header">
-        <img src="./kwp-logo.jpg" alt="KWP" class="kwp-logo-img" onerror="this.src='kwp-logo.jpg'">
+        <img src="kwp-logo.jpg" alt="KWP" class="kwp-logo-img" onerror="this.style.display='none'; document.getElementById('header-fallback').style.display='block';">
+        <div id="header-fallback" style="display: none; font-size: 24px; font-weight: 800; color: var(--kwp-blue);">KWP</div>
     </div>
 
     <!-- HERO SECTION (No "Kingdom Wellness Protocol" text) -->
     <section class="hero">
-        <img src="./kwp-logo.jpg" alt="KWP" class="kwp-hero-logo-img" onerror="this.src='kwp-logo.jpg'">
+        <img src="kwp-logo.jpg" alt="KWP" class="kwp-hero-logo-img" onerror="this.style.display='none'; document.getElementById('hero-fallback').style.display='block';">
+        <div id="hero-fallback" style="display: none; font-size: 48px; margin-bottom: 24px;">👑 KWP</div>
         
         <div style="font-size: 12px; letter-spacing: 0.3em; color: var(--neon-red); margin-bottom: 16px; font-weight: 600;">
             THE UNDERGROUND PLAYBOOK
@@ -458,10 +482,16 @@
         </div>
     </section>
 
-    <!-- TERMS SECTION - MOVED ABOVE PRICING -->
+    <!-- TERMS SECTION - WITH KNOX WINDSOR PEMBROKE -->
     <section class="disclaimer" id="terms-section">
         <div class="disclaimer-box">
-            <div style="color: #ffaa00; font-size: 12px; font-weight: 700; margin-bottom: 16px;">⚠️ KWP LEGAL NOTICE</div>
+            <div style="color: #ffaa00; font-size: 12px; font-weight: 700; margin-bottom: 16px;">⚠️ LEGAL NOTICE</div>
+            
+            <!-- KWP FULL NAME -->
+            <p style="color: var(--text-muted); font-size: 11px; margin-bottom: 16px; letter-spacing: 0.1em;">
+                <strong>KWP stands for Knox Windsor Pembroke</strong>
+            </p>
+            
             <p style="color: var(--text-muted); font-size: 12px; line-height: 1.8;">
                 <strong>Results May Vary:</strong> KWP provides educational tools only. We do not guarantee income or success.
                 Your results depend entirely on your effort, market conditions, existing skills, and business execution.
@@ -470,14 +500,14 @@
             <div class="checkbox-wrap" onclick="toggleAgree()">
                 <input type="checkbox" id="agree-check">
                 <label style="color: var(--text-muted); font-size: 12px; cursor: pointer;">
-                    I understand that KWP provides educational tools only and does not guarantee income or success. 
+                    I understand that KWP (Knox Windsor Pembroke) provides educational tools only and does not guarantee income or success. 
                     I acknowledge that building a modeling business requires effort and results are not guaranteed.
                 </label>
             </div>
         </div>
     </section>
 
-    <!-- PRICING SECTION - NOW BELOW TERMS -->
+    <!-- PRICING SECTION -->
     <section class="pricing-section" id="pricing">
         <div class="section-label">KWP Investment</div>
         <h2>Choose Your Path</h2>
@@ -528,10 +558,13 @@
             <button class="close-btn" onclick="closePaymentModal()">×</button>
             
             <div style="text-align: center; margin-bottom: 24px;">
-                <img src="./kwp-logo.jpg" alt="KWP" class="kwp-logo-small" onerror="this.src='kwp-logo.jpg'">
+                <img src="kwp-logo.jpg" alt="KWP" class="kwp-logo-small" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <div style="display: none; font-size: 24px; font-weight: 800; color: var(--kwp-blue);">KWP</div>
             </div>
 
             <h3 style="text-align: center; margin-bottom: 24px;" id="modal-title">Complete Purchase</h3>
+
+            <div id="debug-box" class="debug-info"></div>
 
             <form id="payment-form">
                 <div class="form-group">
@@ -550,7 +583,7 @@
                     </div>
                 </div>
 
-                <div id="error-message" style="color: #ff6b6b; font-size: 12px; margin-bottom: 16px; text-align: center; display: none;"></div>
+                <div id="error-message" class="error-message"></div>
 
                 <button type="submit" class="btn-full" id="submit-btn">Complete Purchase</button>
                 
@@ -569,6 +602,12 @@
             'agency-monthly': { name: 'Agency Escape Plan - Monthly', price: '$9.99/month' },
             'agency-onetime': { name: 'Agency Escape Plan - Lifetime', price: '$49.99' }
         };
+
+        function showDebug(msg) {
+            const debugBox = document.getElementById('debug-box');
+            debugBox.style.display = 'block';
+            debugBox.textContent = 'Debug: ' + msg;
+        }
 
         function toggleAgree() {
             const check = document.getElementById('agree-check');
@@ -607,6 +646,9 @@
             submitBtn.disabled = true;
             errorDiv.style.display = 'none';
             
+            console.log('Connecting to:', BACKEND_URL);
+            showDebug('Connecting to backend...');
+            
             try {
                 const response = await fetch(`${BACKEND_URL}/create-recovery-session`, {
                     method: 'POST',
@@ -614,15 +656,24 @@
                     body: JSON.stringify({ email: email, product: selectedProduct })
                 });
                 
+                console.log('Status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                
                 const data = await response.json();
+                console.log('Data:', data);
                 
                 if (data.url) {
                     window.location.href = data.url;
                 } else {
-                    throw new Error(data.error || 'Payment failed');
+                    throw new Error(data.error || 'No checkout URL received');
                 }
                 
             } catch (error) {
+                console.error('Error:', error);
+                showDebug(error.message);
                 errorDiv.textContent = 'Error: ' + error.message;
                 errorDiv.style.display = 'block';
                 submitBtn.textContent = 'Complete Purchase';

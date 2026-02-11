@@ -30,7 +30,6 @@
             overflow-x: hidden;
         }
 
-        /* PROFESSIONAL LOGO STYLES */
         .kwp-header {
             display: flex;
             align-items: center;
@@ -44,11 +43,6 @@
             height: 60px;
             width: auto;
             filter: drop-shadow(0 4px 12px rgba(0,51,153,0.4));
-            transition: transform 0.3s;
-        }
-
-        .kwp-logo-img:hover {
-            transform: scale(1.05);
         }
 
         .kwp-hero-logo-img {
@@ -285,11 +279,11 @@
             padding: 60px 20px;
             background: rgba(0,0,0,0.5);
             border-top: 1px solid rgba(255,255,255,0.05);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .disclaimer-box {
-            max-width: 800px;
-            margin: 0 auto;
             padding: 32px;
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.1);
@@ -305,6 +299,9 @@
 
         .checkbox-wrap input {
             margin-top: 4px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
         }
 
         .modal {
@@ -384,14 +381,14 @@
     </style>
 </head>
 <body>
-    <!-- PROFESSIONAL HEADER WITH LOGO -->
+    <!-- HEADER WITH LOGO ONLY (No text) -->
     <div class="kwp-header">
-        <img src="kwp-logo.jpg" alt="KWP Kingdom Wellness Protocol" class="kwp-logo-img">
+        <img src="./kwp-logo.jpg" alt="KWP" class="kwp-logo-img" onerror="this.src='kwp-logo.jpg'">
     </div>
 
-    <!-- HERO SECTION WITH LOGO -->
+    <!-- HERO SECTION (No "Kingdom Wellness Protocol" text) -->
     <section class="hero">
-        <img src="kwp-logo.jpg" alt="KWP" class="kwp-hero-logo-img">
+        <img src="./kwp-logo.jpg" alt="KWP" class="kwp-hero-logo-img" onerror="this.src='kwp-logo.jpg'">
         
         <div style="font-size: 12px; letter-spacing: 0.3em; color: var(--neon-red); margin-bottom: 16px; font-weight: 600;">
             THE UNDERGROUND PLAYBOOK
@@ -408,7 +405,7 @@
             independent models use to book $3K+ campaigns—without the middleman.
         </p>
 
-        <button class="cta-btn" onclick="document.getElementById('pricing').scrollIntoView({behavior: 'smooth'})">
+        <button class="cta-btn" onclick="document.getElementById('terms-section').scrollIntoView({behavior: 'smooth'})">
             Get The Escape Plan
         </button>
 
@@ -461,6 +458,26 @@
         </div>
     </section>
 
+    <!-- TERMS SECTION - MOVED ABOVE PRICING -->
+    <section class="disclaimer" id="terms-section">
+        <div class="disclaimer-box">
+            <div style="color: #ffaa00; font-size: 12px; font-weight: 700; margin-bottom: 16px;">⚠️ KWP LEGAL NOTICE</div>
+            <p style="color: var(--text-muted); font-size: 12px; line-height: 1.8;">
+                <strong>Results May Vary:</strong> KWP provides educational tools only. We do not guarantee income or success.
+                Your results depend entirely on your effort, market conditions, existing skills, and business execution.
+            </p>
+            
+            <div class="checkbox-wrap" onclick="toggleAgree()">
+                <input type="checkbox" id="agree-check">
+                <label style="color: var(--text-muted); font-size: 12px; cursor: pointer;">
+                    I understand that KWP provides educational tools only and does not guarantee income or success. 
+                    I acknowledge that building a modeling business requires effort and results are not guaranteed.
+                </label>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING SECTION - NOW BELOW TERMS -->
     <section class="pricing-section" id="pricing">
         <div class="section-label">KWP Investment</div>
         <h2>Choose Your Path</h2>
@@ -505,29 +522,13 @@
         </div>
     </section>
 
-    <section class="disclaimer">
-        <div class="disclaimer-box">
-            <div style="color: #ffaa00; font-size: 12px; font-weight: 700; margin-bottom: 16px;">⚠️ KWP LEGAL NOTICE</div>
-            <p style="color: var(--text-muted); font-size: 12px; line-height: 1.8;">
-                <strong>Results May Vary:</strong> KWP provides educational tools only. We do not guarantee income or success.
-            </p>
-            <div class="checkbox-wrap" onclick="toggleAgree()">
-                <input type="checkbox" id="agree-check">
-                <label style="color: var(--text-muted); font-size: 12px;">
-                    I understand that KWP provides educational tools only and does not guarantee income or success.
-                </label>
-            </div>
-        </div>
-    </section>
-
     <!-- PAYMENT MODAL -->
     <div class="modal" id="payment-modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closePaymentModal()">×</button>
             
-            <!-- LOGO IN MODAL -->
             <div style="text-align: center; margin-bottom: 24px;">
-                <img src="kwp-logo.jpg" alt="KWP" class="kwp-logo-small">
+                <img src="./kwp-logo.jpg" alt="KWP" class="kwp-logo-small" onerror="this.src='kwp-logo.jpg'">
             </div>
 
             <h3 style="text-align: center; margin-bottom: 24px;" id="modal-title">Complete Purchase</h3>
@@ -576,7 +577,7 @@
 
         function openPaymentModal(product) {
             if (!document.getElementById('agree-check').checked) {
-                alert('Please agree to the KWP terms above.');
+                alert('Please agree to the KWP terms above first.');
                 return;
             }
             
